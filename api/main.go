@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	fmt.Println("Hi")
+	fmt.Println("Starting Payments API...")
 
 	r := router.Generate()
 
