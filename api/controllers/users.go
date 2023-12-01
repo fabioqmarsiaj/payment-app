@@ -32,3 +32,14 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(fmt.Sprintf("User created with ID %s", userCreated.InsertedID)))
 
 }
+
+func GetAllUsers(w http.ResponseWriter, r *http.Request){
+	allUsers, err := repositories.GetAll()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	allUsersJson, _ := json.Marshal(allUsers)
+
+	w.Write([]byte(fmt.Sprintf("All Users: %s", allUsersJson)))
+}
