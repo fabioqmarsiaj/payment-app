@@ -2,6 +2,8 @@ package repositories
 
 import (
 	"api/db"
+	"api/dto"
+	"api/mappers"
 	"api/models"
 	"context"
 	"log"
@@ -31,7 +33,7 @@ func Create(user models.User) (*mongo.InsertOneResult, error) {
 	return userCreated, nil
 }
 
-func GetAll() ([]models.User, error) {
+func GetAll() ([]dto.UserDTO, error) {
 	client, err := db.Connect()
 
 	defer func() {
@@ -59,5 +61,12 @@ func GetAll() ([]models.User, error) {
 		allUsersList = append(allUsersList, result)
 	}
 
-	return allUsersList, nil
+	var allUsersListDTO []dto.UserDTO
+
+	for _, user := range allUsersList {
+		userDTO := mappers.UserToUserDTO(&user)
+		allUsersListDTO = append(allUsersListDTO, *userDTO)
+	}
+
+	return allUsersListDTO, err
 }

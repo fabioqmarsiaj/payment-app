@@ -9,6 +9,8 @@ import (
 	"log"
 	"net/http"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func CreateUser(w http.ResponseWriter, r *http.Request) {
@@ -22,7 +24,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(erro)
 	}
 
-	userToCreate := models.User{Name: user.Name, Email: user.Email, Password: user.Password, CreatedAt: time.Now()}
+	userToCreate := models.User{ID: primitive.NewObjectID(),Name: user.Name, Email: user.Email, Password: user.Password, CreatedAt: time.Now()}
 
 	userCreated, err := repositories.Create(userToCreate)
 	if err != nil {
