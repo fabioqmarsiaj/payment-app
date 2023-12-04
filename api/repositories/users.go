@@ -54,7 +54,7 @@ func GetAllUsers() ([]dto.UserDTO, error) {
 
 func GetUserByName(name string) (models.User) {
 
-	filter := bson.D{{"name", name}}
+	filter := bson.D{{Key: "name", Value: name}}
 
 	var user models.User
 	coll.FindOne(context.TODO(), filter).Decode(&user)
