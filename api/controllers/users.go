@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -26,7 +27,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	userToCreate := models.User{ID: primitive.NewObjectID(),Name: user.Name, Email: user.Email, Password: user.Password, CreatedAt: time.Now()}
 
-	userCreated, err := repositories.Create(userToCreate)
+	userCreated, err := repositories.CreateUser(userToCreate)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -36,7 +37,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAllUsers(w http.ResponseWriter, r *http.Request){
-	allUsers, err := repositories.GetAll()
+	allUsers, err := repositories.GetAllUsers()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -44,4 +45,14 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request){
 	allUsersJson, _ := json.Marshal(allUsers)
 
 	w.Write([]byte(fmt.Sprintf("All Users: %s", allUsersJson)))
+}
+
+func GetUserByName(w http.ResponseWriter, r *http.Request){
+	parameters := mux.Vars(r)
+/* 
+	user, err := repositories.GetUserByName(parameters["name"]) */
+	
+
+	w.Write([]byte(fmt.Sprintf("User: %s", parameters["name"])))
+
 }

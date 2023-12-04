@@ -12,18 +12,21 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-// insert an user into DB
-func Create(user models.User) (*mongo.InsertOneResult, error) {
-	
+var coll *mongo.Collection
+
+func init(){
 	client, err := db.Connect()
 
-	defer func() {
-		if err := client.Disconnect(context.TODO()); err != nil {
-			panic(err)
-		}
-	}()
+	if err != nil{
+		client.Disconnect(context.TODO())
+		log.Fatal(err)
+	}
 
-	coll := client.Database("payments").Collection("users")
+	coll = client.Database("payments").Collection("users")
+}
+
+// insert an user into DB
+func CreateUser(user models.User) (*mongo.InsertOneResult, error) {
 	
 	userCreated, err := coll.InsertOne(context.TODO(), user)
 
@@ -33,16 +36,7 @@ func Create(user models.User) (*mongo.InsertOneResult, error) {
 	return userCreated, nil
 }
 
-func GetAll() ([]dto.UserDTO, error) {
-	client, err := db.Connect()
-
-	defer func() {
-		if err := client.Disconnect(context.TODO()); err != nil {
-			panic(err)
-		}
-	}()
-
-	coll := client.Database("payments").Collection("users")
+func GetAllUsers() ([]dto.UserDTO, error) {
 
 	allUsers, err := coll.Find(context.TODO(), bson.D{})
 
@@ -70,3 +64,8 @@ func GetAll() ([]dto.UserDTO, error) {
 
 	return allUsersListDTO, err
 }
+
+/* func GetUserByName(name string) (models.User, error) {
+
+	return nil, nil
+} */
