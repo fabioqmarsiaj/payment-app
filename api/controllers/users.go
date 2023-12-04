@@ -44,15 +44,16 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request){
 
 	allUsersJson, _ := json.Marshal(allUsers)
 
-	w.Write([]byte(fmt.Sprintf("All Users: %s", allUsersJson)))
+	w.Write([]byte(allUsersJson))
 }
 
 func GetUserByName(w http.ResponseWriter, r *http.Request){
 	parameters := mux.Vars(r)
-/* 
-	user, err := repositories.GetUserByName(parameters["name"]) */
-	
 
-	w.Write([]byte(fmt.Sprintf("User: %s", parameters["name"])))
+	user := repositories.GetUserByName(parameters["name"])
+	
+	userJson, _ := json.Marshal(user)
+
+	w.Write([]byte(userJson))
 
 }

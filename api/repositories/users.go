@@ -46,9 +46,26 @@ func GetAllUsers() ([]dto.UserDTO, error) {
 
 	var allUsersList []models.User
 
-	for allUsers.Next(context.TODO()){
+	// If err is not null, will populate err, otherwise will change de allUsers fields
+	allUsersListDTO := createUsersListDTO(allUsers, allUsersList)
+
+	return allUsersListDTO, err
+}
+
+func GetUserByName(name string) (models.User) {
+
+	filter := bson.D{{"name", name}}
+
+	var user models.User
+	coll.FindOne(context.TODO(), filter).Decode(&user)
+
+	return user
+}
+
+func createUsersListDTO(allUsers *mongo.Cursor, allUsersList []models.User) []dto.UserDTO {
+	for allUsers.Next(context.TODO()) {
 		var result models.User
-		// If err is not null, will populate err, otherwise will change de allUsers fields
+
 		if err := allUsers.Decode(&result); err != nil {
 			log.Fatal("Failed to decode", err)
 		}
@@ -61,11 +78,5 @@ func GetAllUsers() ([]dto.UserDTO, error) {
 		userDTO := mappers.UserToUserDTO(&user)
 		allUsersListDTO = append(allUsersListDTO, *userDTO)
 	}
-
-	return allUsersListDTO, err
+	return allUsersListDTO
 }
-
-/* func GetUserByName(name string) (models.User, error) {
-
-	return nil, nil
-} */
